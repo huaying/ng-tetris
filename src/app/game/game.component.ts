@@ -22,16 +22,26 @@ import {
 })
 export class GameComponent implements OnInit {
   readonly BLOCK = BLOCK;
+  readonly GAME_STATUS = GAME_STATUS;
   grid;
+  gameStatus;
 
   constructor(private gameService: GameService) { }
 
   ngOnInit() {
     this.getGrid();
-    this.gameService.gameStart();
+    this.getGameStatus();
   }
 
   getGrid() {
     this.gameService.getGrid().subscribe(grid => this.grid = grid);
+  }
+
+  getGameStatus() {
+    this.gameService.getGameStatus().subscribe(status => this.gameStatus = status);
+  }
+
+  gameStart() {
+    this.gameService.gameStart();
   }
 }

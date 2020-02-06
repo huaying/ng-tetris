@@ -24,6 +24,7 @@ export class GameService {
   grid;
   gridSubject;
   status;
+  statusSubject;
   timer;
   piece;
   piecePos;
@@ -31,13 +32,11 @@ export class GameService {
 
   constructor() { 
     this.status = GAME_STATUS.INIT,
+    this.statusSubject = new BehaviorSubject(this.status);
+    this.timer = null;
     this.grid = Array(NUM_ROW).fill(null).map(r => Array(NUM_COLUMN).fill(EMPTY));
     this.gridSubject = new BehaviorSubject(this.grid);
-    this.timer = null;
-    this.piece = null;
-    this.piecePos = null;
-    this.pieceDeg = null;
-
+    this.initState();
     window.addEventListener("keydown", this.controller);
   }
 
@@ -45,12 +44,32 @@ export class GameService {
     return this.gridSubject;
   }
 
+  getGameStatus = () => {
+    return this.statusSubject;
+  }
+
   gameStart() {
+    this.initState();
     this.status = GAME_STATUS.PLAYING;
+    this.statusSubject.next(this.status);
     window.clearInterval(this.timer);
     this.timer = setInterval(this.gameLoop, LOOP_TIME);
     this.placeNewPiece();
   };
+
+  private gameEnd = () => {
+    this.status = GAME_STATUS.GAMEOVER;
+    this.statusSubject.next(this.status);
+    window.clearInterval(this.timer);
+  };
+
+  private initState = () => {
+    this.grid = Array(NUM_ROW).fill(null).map(r => Array(NUM_COLUMN).fill(EMPTY));
+    this.gridSubject.next(this.grid);
+    this.piece = null;
+    this.piecePos = null;
+    this.pieceDeg = null;
+  }
 
   private controller = e => {
     const { status, piece, piecePos, pieceDeg } = this;
@@ -208,8 +227,20 @@ export class GameService {
     const piece = randomItems(Object.keys(PIECE));
     const shift = Math.floor((NUM_COLUMN - 1) / 2);
     const positions = this.getPiecePositions(piece, [0, shift], DEG.ZERO);
-
-    this.updatePiece(piece, [0, shift], DEG.ZERO, [0, 0]);
+    if (positions.every(([i, j]) => this.cellEmpty(this.grid[i][j]))) {
+      this.updatePiece(piece, [0, shift], DEG.ZERO, [0, 0]);
+      this.updateShadow(this.piece, this.piecePos, this.pieceDeg);
+    } else {
+      const newGrid = [...this.grid];
+      const backupPosistions = positions.map(([i, j]) => [i - 1, j]);
+      if (!backupPosistions.some(([i, j]) => i >= 0 && this.grid[i][j] !== EMPTY)) {
+        backupPosistions.forEach(([i, j]) => {
+          if (i >= 0) newGrid[i][j] = piece;
+        });
+      }
+      this.grid = newGrid;
+      this.gameEnd();
+    }
   }
 
   private getPiecePositions = (piece, position, degree) => {
