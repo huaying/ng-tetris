@@ -3,14 +3,6 @@ import { Component, OnInit } from '@angular/core';
 import { GameService } from '../game.service';
 
 import {
-  NUM_ROW,
-  NUM_COLUMN,
-  EMPTY,
-  SHADOW,
-  DIR,
-  DEG,
-  PIECE,
-  LOOP_TIME,
   GAME_STATUS,
   BLOCK
 } from "../constants";
