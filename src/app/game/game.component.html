@@ -1,1 +1,6 @@
-<p>game works!</p>
+<div class="board">
+    <div class="row" *ngFor="let row of grid">
+        <div [ngClass]="['cell', BLOCK[cell].name]" *ngFor="let cell of row"></div>
+    </div>
+</div>
+

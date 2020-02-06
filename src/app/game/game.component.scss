@@ -1,0 +1,62 @@
+$cell-size: 25px;
+$cell-border-color: #dedede;
+
+.row {
+  display: flex;
+}
+
+.cell {
+  width: $cell-size;
+  height: $cell-size;
+  border: 1px solid $cell-border-color;
+}
+
+.cell + .cell {
+  border-left: none;
+}
+
+.cell:not(.empty):not(.shadow) {
+  box-shadow: inset 0px 0px 5px 1px rgba(255, 255, 255, 0.4);
+}
+
+
+.row + .row .cell {
+  border-top: none;
+}
+
+.empty {
+  background: #efefef;
+}
+
+.shadow {
+  background: rgba(0, 0, 0, 0.1);
+  box-shadow: inset 0px 0px 5px 1px rgba(0, 0, 0, 0.2);
+}
+
+.cube {
+  background: #7e7eff;
+}
+
+.stick {
+  background: #ff4444;
+}
+
+.tshape {
+  background: #ffd17e;
+}
+
+.lshape {
+  background: #49cc49;
+}
+
+.lshape-r {
+  background: #ab3cab;
+}
+
+.lighting {
+  background: #a2a2a2;
+}
+
+.lighting-r {
+  background: lightsalmon;
+}
