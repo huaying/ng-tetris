@@ -1,6 +1,11 @@
-<div class="board">
-    <div class="row" *ngFor="let row of grid">
-        <div [ngClass]="['cell', BLOCK[cell].name]" *ngFor="let cell of row"></div>
+<div class="game">
+    <div class="board">
+        <div class="row" *ngFor="let row of grid">
+            <div [ngClass]="['cell', BLOCK[cell].name]" *ngFor="let cell of row"></div>
+        </div>
+    </div>
+    <div class="info">
+        <span class="game-title">Tetris</span>
+        <span class="start-btn" (click)="gameStart">Start</span>
     </div>
 </div>
-
